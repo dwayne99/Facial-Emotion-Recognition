@@ -5,12 +5,17 @@ import tensorflow as tf
 from keras.preprocessing import image
 
 # Load the model 
-model = tf.keras.models.load_model('FED_model.h5')
+model = tf.keras.models.load_model('FER_model.h5')
 
 # Defining the classes 
 classes  = {
-    0:'Angry', 1:'Disgust', 2:'Fear', 3:'Happy',
-    4:'Sad', 5:'Surprise', 6:'Neutral'
+    0:['Angry','\U0001F621'],
+    1:['Disgust', '\U0001F624'],
+    2:['Fear', '\U0001F630'],
+    3:['Happy','\U0001F603'],
+    4:['Sad', '\U0001F61E'],
+    5:['Surprise', '\U0001F62E'],
+    6:['Neutral','\U0001F611']
 }
 
 # Load the Haar cascade
@@ -54,12 +59,14 @@ while True:
 
         # Finding Max of predictions
         max_index = np.argmax(predictions[0])
+        max_pred = int(predictions[0][max_index] * 100)
         
         # Mapping index to emotion
-        emotion = classes[max_index]
+        emotion = classes[max_index][0]
+        emotion_emoji = classes[max_index][1]
 
         # Display onto the screen
-        cv2.putText(test_img, emotion, (int(x),int(y)), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 2)
+        cv2.putText(test_img , emotion+ str(max_pred), (int(x),int(y)), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 2)
 
 
     resized_img = cv2.resize(test_img, (1000,700))
